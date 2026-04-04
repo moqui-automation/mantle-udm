@@ -45,7 +45,26 @@ along with this software (see the LICENSE.md file). If not, see
             <moqui.basic.Enumeration description="Operating" enumId="BudgetOperating" enumTypeId="BudgetType"/>
 
             <!-- Budget Status -->
-            <moqui.basic.StatusType description="Budget" statusTypeId="Budget"/>
+            <moqui.basic.StatusType description="Budget Status" statusTypeId="Budget"/>
+            <moqui.basic.StatusItem description="Draft" sequenceNum="0" statusId="BgtDraft" statusTypeId="Budget"/>
+            <moqui.basic.StatusItem description="Submitted" sequenceNum="1" statusId="BgtSubmitted" statusTypeId="Budget"/>
+            <moqui.basic.StatusItem description="Reviewed" sequenceNum="3" statusId="BgtReviewed" statusTypeId="Budget"/>
+            <moqui.basic.StatusItem description="In Progress" sequenceNum="4" statusId="BgtInProgress" statusTypeId="Budget"/>
+            <moqui.basic.StatusItem description="Completed" sequenceNum="5" statusId="BgtCompleted" statusTypeId="Budget"/>
+            <moqui.basic.StatusItem description="Cancelled" sequenceNum="99" statusId="BgtCancelled" statusTypeId="Budget"/>
+            <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="BgtDraft" toStatusId="BgtSubmitted" transitionName="Submit"/>
+            <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="BgtDraft" toStatusId="BgtCancelled" transitionName="Cancel"/>
+            <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="BgtSubmitted" toStatusId="BgtCompleted" transitionName="Complete"/>
+            <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="BgtSubmitted" toStatusId="BgtReviewed" transitionName="Reviewed"/>
+            <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="BgtSubmitted" toStatusId="BgtInProgress" transitionName="Start Progress"/>
+            <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="BgtSubmitted" toStatusId="BgtCancelled" transitionName="Cancel"/>
+            <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="BgtReviewed" toStatusId="BgtCompleted" transitionName="Complete"/>
+            <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="BgtReviewed" toStatusId="BgtInProgress" transitionName="Start Progress"/>
+            <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="BgtReviewed" toStatusId="BgtCancelled" transitionName="Cancel"/>
+            <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="BgtInProgress" toStatusId="BgtSubmitted" transitionName="Stop Progress (to Submitted)"/>
+            <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="BgtInProgress" toStatusId="BgtCompleted" transitionName="Complete"/>
+            <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="BgtInProgress" toStatusId="BgtCancelled" transitionName="Cancel"/>
+            <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="BgtCompleted" toStatusId="BgtInProgress" transitionName="Re-open"/>    
         </seed-data>
     </entity>
     <entity entity-name="BudgetItem" package="mantle.other.budget">
@@ -112,6 +131,10 @@ along with this software (see the LICENSE.md file). If not, see
         <seed-data>
             <!-- Budget Review Result -->
             <moqui.basic.EnumerationType description="Budget Review Result" enumTypeId="BudgetReviewResult"/>
+            <moqui.basic.Enumeration description="Positive" enumId="BdgRwPositive" enumTypeId="BudgetReviewResult"/>
+            <moqui.basic.Enumeration description="Postponed" enumId="BdgRwPostponed" enumTypeId="BudgetReviewResult"/>
+            <moqui.basic.Enumeration description="Suspended" enumId="BdgRwSuspended" enumTypeId="BudgetReviewResult"/>
+            <moqui.basic.Enumeration description="Negative" enumId="BdgRwNegative" enumTypeId="BudgetReviewResult"/>
         </seed-data>
     </entity>
     <entity entity-name="BudgetRevision" package="mantle.other.budget">
@@ -138,9 +161,14 @@ along with this software (see the LICENSE.md file). If not, see
         <field name="budgetId" type="id" is-pk="true"/>
         <field name="partyId" type="id" is-pk="true"/>
         <field name="roleTypeId" type="id" is-pk="true"/>
-        <relationship type="one" related="mantle.other.budget.Budget"/>
-        <relationship type="one" related="mantle.party.Party"/>
-        <relationship type="one" related="mantle.party.RoleType"/>
+        <field name="fromDate" type="date-time" is-pk="true"/>
+        <field name="thruDate" type="date-time"/>
+        <field name="receiveNotifications" type="text-indicator"/>
+        <relationship type="one" related="mantle.other.budget.Budget" short-alias="budget"/>
+        <relationship type="one" related="mantle.party.Party" short-alias="party"/>
+        <relationship type="one" related="mantle.party.RoleType" short-alias="role"/>
+        <relationship type="one-nofk" related="mantle.party.Person" short-alias="person"/>
+        <relationship type="one-nofk" related="mantle.party.Organization" short-alias="organization"/>
     </entity>
     <entity entity-name="BudgetScenario" package="mantle.other.budget">
         <field name="budgetScenarioId" type="id" is-pk="true"/>
@@ -176,14 +204,17 @@ along with this software (see the LICENSE.md file). If not, see
         <description>For tax and other government authorities in any domain (sales/VAT, income, labor, etc)</description>
         <field name="taxAuthorityId" type="id" is-pk="true"/>
         <field name="taxAuthorityTypeEnumId" type="id"/>
+        <field name="taxAuthorityRateTypeEnumId" type="id"/>
         <field name="description" type="text-medium"/>
         <field name="taxAuthGeoId" type="id"/>
         <field name="taxAuthPartyId" type="id"/>
         <field name="requireTaxIdForExemption" type="text-indicator"/>
         <field name="taxIdFormatPattern" type="text-medium"/>
         <field name="includeTaxInPrice" type="text-indicator"><description>This is mainly for VAT tax authorities</description></field>
-        <relationship type="one" title="TaxAuthorityType" related="moqui.basic.Enumeration">
+        <relationship type="one" title="TaxAuthorityType" related="moqui.basic.Enumeration" short-alias="taxAuthorityType">
             <key-map field-name="taxAuthorityTypeEnumId"/></relationship>
+        <relationship type="one" title="TaxAuthorityRateType" related="moqui.basic.Enumeration" short-alias="taxAuthorityRateType">
+            <key-map field-name="taxAuthorityRateTypeEnumId"/></relationship>
         <relationship type="one" title="TaxAuth" related="moqui.basic.Geo">
             <key-map field-name="taxAuthGeoId"/></relationship>
         <relationship type="one" title="TaxAuth" related="mantle.party.Party">
@@ -195,6 +226,12 @@ along with this software (see the LICENSE.md file). If not, see
             <moqui.basic.Enumeration enumId="TatCounty" description="County/Parish/Borough" enumTypeId="TaxAuthorityType"/>
             <moqui.basic.Enumeration enumId="TatCity" description="City" enumTypeId="TaxAuthorityType"/>
             <!-- use TatCounty or TatCity instead: <moqui.basic.Enumeration enumId="TatLocal" description="Local" enumTypeId="TaxAuthorityType"/> -->
+
+            <!-- Tax Authority Rate Type -->
+            <moqui.basic.EnumerationType description="Tax Authority Rate Type" enumTypeId="TaxAuthorityRateType"/>
+            <moqui.basic.Enumeration enumId="TartSalesTax" description="Sales Tax" enumTypeId="TaxAuthorityRateType"/>
+            <moqui.basic.Enumeration enumId="TartVatTax" description="Vat Tax" enumTypeId="TaxAuthorityRateType"/>
+            <moqui.basic.Enumeration enumId="TartGstTax" description="Gst Tax" enumTypeId="TaxAuthorityRateType"/>
         </seed-data>
     </entity>
     <entity entity-name="TaxAuthorityAssoc" package="mantle.other.tax">
@@ -224,15 +261,24 @@ along with this software (see the LICENSE.md file). If not, see
     <entity entity-name="TaxAuthorityParty" package="mantle.other.tax">
         <field name="partyId" type="id" is-pk="true"/>
         <field name="taxAuthorityId" type="id" is-pk="true"/>
+        <field name="taxSystemEnumId" type="id"/>
         <field name="fromDate" type="date-time" is-pk="true"/>
         <field name="thruDate" type="date-time"/>
         <field name="partyTaxId" type="text-short"/>
         <field name="isExempt" type="text-indicator"/>
+        <field name="exemptionCode" type="text-short"/>
         <field name="isNexus" type="text-indicator">
             <description>If Party has a sufficient presence in the area to have to charge tax set to Y.</description>
         </field>
-        <relationship type="one" related="mantle.party.Party"/>
-        <relationship type="one" related="mantle.other.tax.TaxAuthority"/>
+        <relationship type="one" related="mantle.party.Party" short-alias="party"/>
+        <relationship type="one" related="mantle.other.tax.TaxAuthority" short-alias="taxAuthority"/>
+        <relationship type="one" title="TaxSystem" related="moqui.basic.Enumeration" short-alias="taxSystem">
+            <key-map field-name="taxSystemEnumId"/></relationship>
+        <seed-data>
+            <moqui.basic.EnumerationType description="Tax System" enumTypeId="TaxSystem"/>
+            <!-- Example: Tax system for Italy companies -->
+            <moqui.basic.Enumeration enumId="TsOrdinary" description="Ordinary" enumTypeId="TaxSystem"/>
+        </seed-data>
     </entity>
     <!-- Using a Drools Decision Table instead of this (much more flexible):
     <entity entity-name="TaxAuthorityRate" package="mantle.other.tax">
@@ -271,7 +317,7 @@ along with this software (see the LICENSE.md file). If not, see
 
     <entity entity-name="TaxGatewayConfig" package="mantle.other.tax">
         <field name="taxGatewayConfigId" type="id" is-pk="true"/>
-        <field name="taxGatewayTypeEnumId" type="id"><description>Each payment gateway integration should define a
+        <field name="taxGatewayTypeEnumId" type="id"><description>Each tax gateway integration should define a
             TaxGatewayType Enumeration record plus an entity with a shared PK (ie PK is taxGatewayTypeEnumId).</description></field>
         <field name="description" type="text-medium"/>
         <field name="calculateServiceName" type="text-medium"><description>Service implementing

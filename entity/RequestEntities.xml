@@ -96,6 +96,7 @@ along with this software (see the LICENSE.md file). If not, see
             <moqui.basic.Enumeration enumId="RqtInventory" description="Inventory" enumTypeId="RequestType"/>
             <moqui.basic.Enumeration enumId="RqtPurchase" description="Purchase" enumTypeId="RequestType"/>
             <moqui.basic.Enumeration enumId="RqtContact" description="Contact Us" enumTypeId="RequestType"/>
+            <moqui.basic.Enumeration enumId="RqtEngineeringChange" description="Engineering Change" enumTypeId="RequestType"/>
 
             <!-- Request Status -->
             <moqui.basic.StatusType description="Request Status" statusTypeId="Request"/>
@@ -254,12 +255,12 @@ along with this software (see the LICENSE.md file). If not, see
         <relationship type="one-nofk" related="mantle.party.Organization" short-alias="organization"/>
         <seed-data>
             <moqui.basic.Enumeration description="Request" enumId="RgpRequest" enumTypeId="RoleGroup"/>
-            <mantle.party.RoleGroupMember  roleGroupEnumId="RgpRequest" roleTypeId="Assignee"/>
-            <mantle.party.RoleGroupMember  roleGroupEnumId="RgpRequest" roleTypeId="Manager"/>
-            <mantle.party.RoleGroupMember  roleGroupEnumId="RgpRequest" roleTypeId="Reporter"/>
-            <mantle.party.RoleGroupMember  roleGroupEnumId="RgpRequest" roleTypeId="Watcher"/>
-            <mantle.party.RoleGroupMember  roleGroupEnumId="RgpRequest" roleTypeId="Customer"/>
-            <mantle.party.RoleGroupMember  roleGroupEnumId="RgpRequest" roleTypeId="CustomerBillTo"/>
+            <mantle.party.RoleGroupMember roleGroupEnumId="RgpRequest" roleTypeId="Assignee"/>
+            <mantle.party.RoleGroupMember roleGroupEnumId="RgpRequest" roleTypeId="Manager"/>
+            <mantle.party.RoleGroupMember roleGroupEnumId="RgpRequest" roleTypeId="Reporter"/>
+            <mantle.party.RoleGroupMember roleGroupEnumId="RgpRequest" roleTypeId="Watcher"/>
+            <mantle.party.RoleGroupMember roleGroupEnumId="RgpRequest" roleTypeId="Customer"/>
+            <mantle.party.RoleGroupMember roleGroupEnumId="RgpRequest" roleTypeId="CustomerBillTo"/>
         </seed-data>
     </entity>
     <entity entity-name="RequestWorkEffort" package="mantle.request" cache="never">
@@ -310,19 +311,20 @@ along with this software (see the LICENSE.md file). If not, see
             <moqui.basic.Enumeration description="Product" enumId="RqTpProduct" enumTypeId="RequirementType"/>
             <moqui.basic.Enumeration description="Inventory" enumId="RqTpInventory" enumTypeId="RequirementType"/>
             <moqui.basic.Enumeration description="Work" enumId="RqTpWork" enumTypeId="RequirementType"/>
+            <moqui.basic.Enumeration description="Production Run" enumId="RqTpProductionRun" enumTypeId="RequirementType"/>
 
             <!-- Requirement Status -->
             <moqui.basic.StatusType description="Requirement Status" statusTypeId="Requirement"/>
             <moqui.basic.StatusItem description="Proposed" sequenceNum="1" statusId="RqmtStProposed" statusTypeId="Requirement"/>
             <moqui.basic.StatusItem description="Created" sequenceNum="2" statusId="RqmtStCreated" statusTypeId="Requirement"/>
             <moqui.basic.StatusItem description="Approved" sequenceNum="3" statusId="RqmtStApproved" statusTypeId="Requirement"/>
-            <moqui.basic.StatusItem description="Ordered" sequenceNum="4" statusId="RqmtStOrdered" statusTypeId="Requirement"/>
+            <moqui.basic.StatusItem description="Fullfilled" sequenceNum="4" statusId="RqmtStFullfilled" statusTypeId="Requirement"/>
             <moqui.basic.StatusItem description="Rejected" sequenceNum="9" statusId="RqmtStRejected" statusTypeId="Requirement"/>
             <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="RqmtStProposed" toStatusId="RqmtStApproved" transitionName="Accept"/>
             <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="RqmtStProposed" toStatusId="RqmtStRejected" transitionName="Reject"/>
             <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="RqmtStCreated" toStatusId="RqmtStApproved" transitionName="Accept"/>
             <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="RqmtStCreated" toStatusId="RqmtStRejected" transitionName="Reject"/>
-            <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="RqmtStApproved" toStatusId="RqmtStOrdered" transitionName="Order"/>
+            <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="RqmtStApproved" toStatusId="RqmtStFullfilled" transitionName="Order"/>
             <moqui.basic.StatusFlowTransition statusFlowId="Default" statusId="RqmtStApproved" toStatusId="RqmtStRejected" transitionName="Reject"/>
         </seed-data>
     </entity>
@@ -356,6 +358,12 @@ along with this software (see the LICENSE.md file). If not, see
         <relationship type="one" related="mantle.request.requirement.Requirement" short-alias="requirement"/>
         <relationship type="one" related="mantle.party.Party" short-alias="party"/>
         <relationship type="one" related="mantle.party.RoleType" short-alias="role"/>
+        <seed-data>
+            <moqui.basic.Enumeration description="Requirement" enumId="RgpRequirement" enumTypeId="RoleGroup"/>
+            <mantle.party.RoleGroupMember roleGroupEnumId="RgpRequirement" roleTypeId="Assignee"/>
+            <mantle.party.RoleGroupMember roleGroupEnumId="RgpRequirement" roleTypeId="Manager"/>
+            <mantle.party.RoleGroupMember roleGroupEnumId="RgpRequirement" roleTypeId="Reporter"/>
+        </seed-data>
     </entity>
     <entity entity-name="RequirementOrderItem" package="mantle.request.requirement" cache="never">
         <field name="requirementId" type="id" is-pk="true"/>
@@ -384,6 +392,7 @@ along with this software (see the LICENSE.md file). If not, see
             <moqui.basic.Enumeration description="Deploys" enumId="WrfDeploys" enumTypeId="WorkRequirementFulfillmentType"/>
             <moqui.basic.Enumeration description="Tests" enumId="WrfTests" enumTypeId="WorkRequirementFulfillmentType"/>
             <moqui.basic.Enumeration description="Delivers" enumId="WrfDelivers" enumTypeId="WorkRequirementFulfillmentType"/>
+            <moqui.basic.Enumeration description="Produces" enumId="WrfProduces" enumTypeId="WorkRequirementFulfillmentType"/>
         </seed-data>
     </entity>
 </entities>

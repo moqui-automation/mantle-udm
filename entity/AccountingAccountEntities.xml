@@ -776,14 +776,19 @@ along with this software (see the LICENSE.md file). If not, see
         <relationship type="one" related="mantle.party.RoleType"/>
     </entity>
     <entity entity-name="InvoiceTerm" package="mantle.account.invoice" cache="never">
-        <field name="invoiceId" type="id" is-pk="true"/>
-        <field name="invoiceItemSeqId" type="id" is-pk="true"/>
-        <field name="settlementTermId" type="id" is-pk="true"/>
-        <relationship type="one" related="mantle.account.invoice.Invoice">
-            <key-map field-name="invoiceId"/></relationship>
-        <relationship type="one-nofk" related="mantle.account.invoice.InvoiceItem">
-            <key-map field-name="invoiceId"/><key-map field-name="invoiceItemSeqId"/></relationship>
+        <field name="invoiceTermId" type="id" is-pk="true"/>
+        <field name="invoiceId" type="id" not-null="true"/>
+        <field name="invoiceItemSeqId" type="id"/>
+        <field name="settlementTermId" type="id"/>
+        <field name="termTypeEnumId" type="id"/>
+        <field name="termText" type="text-long"/>
+        <field name="termNumber" type="number-decimal"/>
+        <relationship type="one" related="mantle.account.invoice.Invoice"/>
+        <relationship type="one-nofk" related="mantle.account.invoice.InvoiceItem"/>
         <relationship type="one" related="mantle.account.invoice.SettlementTerm"/>
+        <relationship type="one" title="TermType" related="moqui.basic.Enumeration">
+            <key-map field-name="termTypeEnumId"/></relationship>
+        <!-- see the mantle.account.invoice.SettlementTerm entity for TermType enums -->
     </entity>
     <entity entity-name="SettlementTerm" package="mantle.account.invoice" cache="true">
         <field name="settlementTermId" type="id" is-pk="true"/>
@@ -827,7 +832,36 @@ along with this software (see the LICENSE.md file). If not, see
             <moqui.basic.Enumeration description="Commission Term Minimum Per Unit" parentEnumId="TtCommission" enumId="TtCommissionMin" enumTypeId="TermType"/>
             <moqui.basic.Enumeration description="Commission Term Maximum Per Unit" parentEnumId="TtCommission" enumId="TtCommissionMax" enumTypeId="TermType"/>
 
-            <!-- Incoterms as of 2010; see https://en.wikipedia.org/wiki/Incoterms -->
+            <!-- Italy VAT tax terms -->
+            <moqui.basic.Enumeration description="Vat Tax Term" enumId="TtVatTax" enumTypeId="TermType"/>
+            <moqui.basic.Enumeration description="VAT Chargeability" enumId="TtVatChargeability" parentEnumId="TtVatTax" enumTypeId="TermType"/>
+            <moqui.basic.Enumeration description="Immediate Charge" enumId="TtVatImmediateChargeability" parentEnumId="TtVatChargeability" enumTypeId="TermType"/>
+            <moqui.basic.Enumeration description="Split payment (the split payment regime is not compatible with reverse charge regime)" enumId="TtVatSpitPayment" parentEnumId="TteVatChargeability" enumTypeId="TermType"/>
+            <moqui.basic.Enumeration description="Deffered Charge" enumId="TtVatDefferedChargeability" parentEnumId="TteVatChargeability" enumTypeId="TermType"/>
+            <!-- these VAT tax term are already expressed in the invoiceTypeEumId field of the Invoice entity -->
+            <!--
+            <moqui.basic.Enumeration description="Invoice" enumId="TtInvoice" parentEnumId="TtVatTax" enumTypeId="TermType"/>
+            <moqui.basic.Enumeration description="Credit Note" enumId="TtCreditNote" parentEnumId="TtVatTax" enumTypeId="TermType"/>
+            <moqui.basic.Enumeration description="Debit Note" enumId="TtDebitNote" parentEnumId="TtVatTax" enumTypeId="TermType"/>
+            -->
+            <moqui.basic.Enumeration description="Fee" enumId="TtFee" parentEnumId="TtVatTax" enumTypeId="TermType"/>
+            <moqui.basic.Enumeration description="Advance/down payment on invoice" enumId="TtAdvancePaymentOnInvoice" parentEnumId="TtVatTax" enumTypeId="TermType"/>
+            <moqui.basic.Enumeration description="Advance/down payment on fee" enumId="TtAdvancePaymentOnFee" parentEnumId="TtVatTax" enumTypeId="TermType"/>
+            <moqui.basic.Enumeration description="Reverse charge internal invoice integration" enumId="TtRevChgInternal" parentEnumId="TtVatTax" enumTypeId="TermType"/>
+            <moqui.basic.Enumeration description="Integration/self invoicing for purchase services from abroad" enumId="TtIntegrationForPurchaseServicesAbroad" parentEnumId="TtVatTax" enumTypeId="TermType"/>
+            <moqui.basic.Enumeration description="Integration for purchase of intra UE goods" enumId="TtIntegrationForPurchaseIntraUE" parentEnumId="TtVatTax" enumTypeId="TermType"/>
+            <moqui.basic.Enumeration description="Integration/self invoicing for purchase of goods ex art.17 c.2 DPR 633/72" enumId="TtIntegrationForPurchaseArt17" parentEnumId="TtVatTax" enumTypeId="TermType"/>
+            <moqui.basic.Enumeration description="Self invoicing for regularisation and integration of invoices (ex art.6 c.8 and 9-bis d.lgs 471/97 or art.46 c.5 D.L.331/93)" enumId="TtIntegrationArt6Art46" parentEnumId="TtVatTax" enumTypeId="TermType"/>
+            <moqui.basic.Enumeration description="Self invoicing for splaphoning" enumId="TtSelfInvoiceSplaphoning" parentEnumId="TtVatTax" enumTypeId="TermType"/>
+            <moqui.basic.Enumeration description="Extractions of goods from VAT Warehouse" enumId="TtExtsFromVatWh" parentEnumId="TtVatTax" enumTypeId="TermType"/>
+            <moqui.basic.Enumeration description="Extractions of goods from VAT Warehouse with payment of VAT" enumId="TtExtsFromVatWhWithVatPymt" parentEnumId="TtVatTax" enumTypeId="TermType"/>
+            <moqui.basic.Enumeration description="Deferred invoice ex art.21, c.4, third period lett. a) DPR 633/72" enumId="TtArt21LetA" parentEnumId="TtVatTax" enumTypeId="TermType"/>
+            <moqui.basic.Enumeration description="Deferred invoice ex art.21, c.4, third period lett. b) DPR 633/72" enumId="TtArt21LetB" parentEnumId="TtVatTax" enumTypeId="TermType"/>
+            <moqui.basic.Enumeration description="Sale of depreciable assets and for internal transfers (ex art.36 DPR 633/72)" enumId="TtSaleOfDepreciableAssets" parentEnumId="TtVatTax" enumTypeId="TermType"/>
+            <moqui.basic.Enumeration description="Self invoicing for self consumption or for free transfer without recourse" enumId="TtSelfConsumption" parentEnumId="TtVatTax" enumTypeId="TermType"/>
+            <moqui.basic.Enumeration description="Purchases from San Marino with VAT (paper invoice)" enumId="TtPurchaseFromSanMarino" parentEnumId="TtVatTax" enumTypeId="TermType"/>
+
+            <!-- Incoterms as of 2020; see https://en.wikipedia.org/wiki/Incoterms -->
             <moqui.basic.Enumeration description="Incoterm" enumId="TtInco" enumTypeId="TermType"/>
             <moqui.basic.Enumeration description="Incoterm Ex Works" parentEnumId="TtInco" enumId="TtEXW" enumCode="EXW" enumTypeId="TermType"/>
             <moqui.basic.Enumeration description="Incoterm Free Carrier" parentEnumId="TtInco" enumId="TtFCA" enumCode="FCA" enumTypeId="TermType"/>
@@ -839,14 +873,7 @@ along with this software (see the LICENSE.md file). If not, see
             <moqui.basic.Enumeration description="Incoterm Carriage and Insurance Paid to" parentEnumId="TtInco" enumId="TtCIP" enumCode="CIP" enumTypeId="TermType"/>
             <moqui.basic.Enumeration description="Incoterm Delivered Duty Paid" parentEnumId="TtInco" enumId="TtDDP" enumCode="DDP" enumTypeId="TermType"/>
             <moqui.basic.Enumeration description="Incoterm Delivered at Place" parentEnumId="TtInco" enumId="TtDAP" enumCode="DAP" enumTypeId="TermType"/>
-            <!-- Incoterms deprecated in 2010: "Delivered at Frontier" - DAF, "Delivered Ex Ship" - DES,
-                "Delivered Ex Quay" - DEQ, "Delivered Duty Unpaid" - DDU, "Delivered at Terminal" - DAT -->
-            <!-- NOTE: in general DDU => DAP, especially for fulfill to customer -->
-            <moqui.basic.Enumeration description="Incoterm Delivered At Frontier" parentEnumId="TtInco" enumId="TtDAF" enumCode="DAF" enumTypeId="TermType"/>
-            <moqui.basic.Enumeration description="Incoterm Delivered Ex Ship" parentEnumId="TtInco" enumId="TtDES" enumCode="DES" enumTypeId="TermType"/>
-            <moqui.basic.Enumeration description="Incoterm Delivered Ex Quay" parentEnumId="TtInco" enumId="TtDEQ" enumCode="DEQ" enumTypeId="TermType"/>
-            <moqui.basic.Enumeration description="Incoterm Delivered Duty Unpaid" parentEnumId="TtInco" enumId="TtDDU" enumCode="DDU" enumTypeId="TermType"/>
-            <moqui.basic.Enumeration description="Incoterm Delivered at Terminal" parentEnumId="TtInco" enumId="TtDAT" enumCode="DAT" enumTypeId="TermType"/>
+            <moqui.basic.Enumeration description="Incoterm Delivered at Place Unloaded" parentEnumId="TtInco" enumId="TtDPU" enumCode="DPU" enumTypeId="TermType"/>
 
             <moqui.basic.Enumeration description="Purchasing" enumId="TtPurchasing" enumTypeId="TermType"/>
             <moqui.basic.Enumeration description="Preferred Freight" enumId="TtFreight" enumTypeId="TermType"/>
@@ -1132,6 +1159,7 @@ along with this software (see the LICENSE.md file). If not, see
         <field name="typeEnumId" type="id"/>
         <field name="routingNumber" type="text-short"/>
         <field name="accountNumber" type="text-medium"/>
+        <field name="bicSwiftNumber" type="text-short"/>
         <field name="lastCheckNumber" type="number-integer"/>
 
         <field name="nachaImmedDest" type="text-short"><description>Must be 9 digits, generally assigned by bank,
@@ -1498,6 +1526,7 @@ along with this software (see the LICENSE.md file). If not, see
             <moqui.basic.EnumerationType description="Payment Type" enumTypeId="PaymentType"/>
             <moqui.basic.Enumeration description="Disbursement" enumId="PtDisbursement" enumTypeId="PaymentType"/>
             <moqui.basic.Enumeration description="Refund" enumId="PtRefund" enumTypeId="PaymentType"/>
+            <moqui.basic.Enumeration description="VAT Tax Settlement" enumId="PtVatTaxSettlement" enumTypeId="PaymentType"/>
             <!-- Payment meant to be applied to an invoice -->
             <moqui.basic.Enumeration description="Invoice Payment" enumId="PtInvoicePayment" enumTypeId="PaymentType"/>
             <moqui.basic.Enumeration description="Pre Payment - Expense" enumId="PtPrePayment" parentEnumId="PtInvoicePayment" enumTypeId="PaymentType"/>
@@ -1530,6 +1559,27 @@ along with this software (see the LICENSE.md file). If not, see
             <moqui.basic.Enumeration description="Cash On Delivery" enumId="PiCod" enumTypeId="PaymentInstrument"/>
             <moqui.basic.Enumeration description="Wire Transfer" enumId="PiWireTransfer" enumTypeId="PaymentInstrument"/>
             <moqui.basic.Enumeration description="Other" enumId="PiOther" enumTypeId="PaymentInstrument"/>
+            <moqui.basic.Enumeration description="Check" enumId="PiCheck" enumTypeId="PaymentInstrument" relatedEnumId="PmtBankAccount"/>
+            <moqui.basic.Enumeration description="Banker's Draft" enumId="PiBankersDraft" enumTypeId="PaymentInstrument" relatedEnumId="PmtBankAccount"/>
+            <moqui.basic.Enumeration description="Cash at Treasury" enumId="PiCashAtTreasury" enumTypeId="PaymentInstrument" relatedEnumId="PmtBankAccount"/> 
+            <moqui.basic.Enumeration description="Bank Transfer" enumId="PiBankTransfer" enumTypeId="PaymentInstrument" relatedEnumId="PmtBankAccount"/>
+            <moqui.basic.Enumeration description="Pre-compiled Bank Payment Slip" enumId="PiPreCompiledBankPaymentSlip" enumTypeId="PaymentInstrument" relatedEnumId="PmtBankAccount"/>
+            <moqui.basic.Enumeration description="Payment Card" enumId="PiPaymentCard" enumTypeId="PaymentInstrument" relatedEnumId="PmtBankAccount"/>
+            <moqui.basic.Enumeration description="Utilities Direct Debit" enumId="PiUtilitiesDirectDebit" enumTypeId="PaymentInstrument" relatedEnumId="PmtBankAccount"/>
+            <moqui.basic.Enumeration description="Fast Direct Debit" enumId="PiFDD" enumTypeId="PaymentInstrument" relatedEnumId="PmtBankAccount"/>
+            <moqui.basic.Enumeration description="Collection Order" enumId="PiCollectionOrder" enumTypeId="PaymentInstrument" relatedEnumId="PmtBankAccount"/><!-- RIBA -->
+            <moqui.basic.Enumeration description="Payment by Notice" enumId="PiPN" enumTypeId="PaymentInstrument" relatedEnumId="PmtBankAccount"/>
+            <moqui.basic.Enumeration description="Tax Office Quittance" enumId="PiTaxOfficeQuittance" enumTypeId="PaymentInstrument" relatedEnumId="PmtBankAccount"/>
+            <moqui.basic.Enumeration description="Transfer on Special Accounting Account" enumId="PiTransfSpecAcctgAccount" enumTypeId="PaymentInstrument" relatedEnumId="PmtBankAccount"/>
+            <moqui.basic.Enumeration description="Order for Direct Payment from Bank Account" enumId="PiOrdDirPaymentBankAccount" enumTypeId="PaymentInstrument" relatedEnumId="PmtBankAccount"/>
+            <moqui.basic.Enumeration description="Order for Direct Payment from Post Office Account" enumId="PiOrdDirPaymentPostOfficeAccount" enumTypeId="PaymentInstrument" relatedEnumId="PmtBankAccount"/>
+            <moqui.basic.Enumeration description="Bulletin Postal Account" enumId="PiBulletinPostalAccount" enumTypeId="PaymentInstrument" relatedEnumId="PmtBankAccount"/>
+            <moqui.basic.Enumeration description="F24" enumId="PiF24" enumTypeId="PaymentInstrument" relatedEnumId="PmtBankAccount"/>
+            <moqui.basic.Enumeration description="SEPA Direct Debit" enumId="PiSEPADirectDebit" enumTypeId="PaymentInstrument" relatedEnumId="PmtBankAccount"/>
+            <moqui.basic.Enumeration description="SEPA Direct Debit Core" enumId="PiSEPADirectDebitCore" enumTypeId="PaymentInstrument" relatedEnumId="PmtBankAccount"/>
+            <moqui.basic.Enumeration description="SEPA Direct Debit B2B" enumId="PiSEPADirectDebitB2B" enumTypeId="PaymentInstrument" relatedEnumId="PmtBankAccount"/>
+            <moqui.basic.Enumeration description="Deduction on Sums already Collected" enumId="PiDeducSumsCollected" enumTypeId="PaymentInstrument" relatedEnumId="PmtBankAccount"/>
+            <moqui.basic.Enumeration description="Pago PA" enumId="PiPagoPA" enumTypeId="PaymentInstrument" relatedEnumId="PmtBankAccount"/>
             <!-- Using Payment for these is messy, use adjust#Invoice with appropriate item type instead:
             <moqui.basic.Enumeration description="Write-off" enumId="PiWriteOff" enumTypeId="PaymentInstrument"/>
             <moqui.basic.Enumeration description="Discount" enumId="PiDiscount" enumTypeId="PaymentInstrument"/>

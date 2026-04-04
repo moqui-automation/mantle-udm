@@ -19,6 +19,28 @@ along with this software (see the LICENSE.md file). If not, see
 
     <moqui.basic.Enumeration description="Sales Tax" enumId="ItemSalesTax" enumTypeId="ItemType"/>
     <moqui.basic.Enumeration description="VAT Tax (not added to totals)" enumId="ItemVatTax" enumTypeId="ItemType"/>
+    <moqui.basic.Enumeration description="VAT Tax" enumId="ItemVatTaxTotal" parentEnumId="ItemVatTax" enumTypeId="ItemType"/>
+    <moqui.basic.Enumeration description="Excluded pursuant to Art. 15 DPR 633/72" enumId="ItemVatExcludedArt15" parentEnumId="ItemVatTax" enumTypeId="ItemType"/>
+    <moqui.basic.Enumeration description="Not subject to VAT under the articles from 7 to 7-septies of DPR 633/72" enumId="ItemVatNotSubjectArt7" parentEnumId="ItemVatTax" enumTypeId="ItemType"/>
+    <moqui.basic.Enumeration description="Not subject - other cases" enumId="ItemVatNotSubjectOtherCases" parentEnumId="ItemVatTax" enumTypeId="ItemType"/>
+    <moqui.basic.Enumeration description="Not taxable - exportations" enumId="ItemVatNotTaxableExportations" parentEnumId="ItemVatTax" enumTypeId="ItemType"/>
+    <moqui.basic.Enumeration description="Not taxable - intra Community transfers" enumId="ItemVatNotTaxableIntraCommunity" parentEnumId="ItemVatTax" enumTypeId="ItemType"/>
+    <moqui.basic.Enumeration description="Not taxable - transfers to San Marino" enumId="ItemVatNotTaxableSanMarino" parentEnumId="ItemVatTax" enumTypeId="ItemType"/>
+    <moqui.basic.Enumeration description="Not taxable - transactions treated as export supplies" enumId="ItemVatNotTaxableExportSupplies" parentEnumId="ItemVatTax" enumTypeId="ItemType"/>
+    <moqui.basic.Enumeration description="Not taxable - for declaration of intent" enumId="ItemVatNotTaxableDeclarationOfIntent" parentEnumId="ItemVatTax" enumTypeId="ItemType"/>
+    <moqui.basic.Enumeration description="Not taxable - other transactions that don’t contribute to the determination of ceiling" enumId="ItemVatNotTaxableOtherTransactions" parentEnumId="ItemVatTax" enumTypeId="ItemType"/>
+    <moqui.basic.Enumeration description="Exempt" enumId="ItemVatExempt" parentEnumId="ItemVatTax" enumTypeId="ItemType"/>
+    <moqui.basic.Enumeration description="Margin Regime / VAT not exposed on invoice" enumId="ItemVatMarginRegime" parentEnumId="ItemVatTax" enumTypeId="ItemType"/>
+    <moqui.basic.Enumeration description="Reverse charge - transfer of scrap and of other recyclable materials" enumId="ItemVatReverseChargeScrap" parentEnumId="ItemVatTax" enumTypeId="ItemType"/>
+    <moqui.basic.Enumeration description="Reverse charge - transfer of gold and silver in accordance with law 7/2000 as well as used jewelry to OPO" enumId="ItemVatReverseChargeGoldSilver" parentEnumId="ItemVatTax" enumTypeId="ItemType"/>
+    <moqui.basic.Enumeration description="Reverse charge - subcontracting in the construction sector" enumId="ItemVatReverseChargeSubcontracting" parentEnumId="ItemVatTax" enumTypeId="ItemType"/>
+    <moqui.basic.Enumeration description="Reverse charge - transfer of buildings" enumId="ItemVatReverseChargeBuildings" parentEnumId="ItemVatTax" enumTypeId="ItemType"/>
+    <moqui.basic.Enumeration description="Reverse charge - transfer of mobile phones" enumId="ItemVatReverseChargeMobilePhones" parentEnumId="ItemVatTax" enumTypeId="ItemType"/>
+    <moqui.basic.Enumeration description="Reverse charge - transfer of electronic products" enumId="ItemVatReverseChargeElectronicProd" parentEnumId="ItemVatTax" enumTypeId="ItemType"/>
+    <moqui.basic.Enumeration description="Reverse charge - provisions in the construction and related sectors" enumId="ItemVatReverseChargeConstruction" parentEnumId="ItemVatTax" enumTypeId="ItemType"/>
+    <moqui.basic.Enumeration description="Reverse charge - transactions in the energy sector" enumId="ItemVatReverseChargeEnergy" parentEnumId="ItemVatTax" enumTypeId="ItemType"/>
+    <moqui.basic.Enumeration description="Reverse charge - other cases" enumId="ItemVatReverseChargeOtherCases" parentEnumId="ItemVatTax" enumTypeId="ItemType"/>
+    <moqui.basic.Enumeration description="VAT paid in other EU countries (telecommunications, telebroadcasting and electronic services provision pursuant to Art. 7 - octies, paragraph 1, letter a, b, art. 74-sexies Italian Presidential Decree 633/72)" enumId="ItemVatPaidInOtherEUCountries" parentEnumId="ItemVatTax" enumTypeId="ItemType"/>
     <moqui.basic.Enumeration description="Shipping and Handling" enumId="ItemShipping" enumTypeId="ItemType"/>
     <moqui.basic.Enumeration description="Other Shipping (Non-Inventory)" enumId="ItemShippingOther" enumTypeId="ItemType"/>
 
@@ -202,6 +224,41 @@ along with this software (see the LICENSE.md file). If not, see
     <moqui.basic.Enumeration description="Tax - School District Employee" enumId="ItemTaxSchoolDistEmpe" parentEnumId="ItemPayrollTaxes" enumTypeId="ItemType"/>
     <moqui.basic.Enumeration description="Tax - Surtax Employee" enumId="ItemTaxSurtaxEmpe" parentEnumId="ItemPayrollTaxes" enumTypeId="ItemType"/>
 
+    <!-- Italian Fund Type -->
+    <moqui.basic.Enumeration description="Tax - National Pension and Welfare Fund for Lawyers and Solicitors" enumId="ItemTaxStateLawyers" parentEnumId="ItemPayrollTaxes" enumTypeId="ItemType"/>
+    <moqui.basic.Enumeration description="Tax - Pension fund for accountants" enumId="ItemTaxStateAccountants" parentEnumId="ItemPayrollTaxes" enumTypeId="ItemType"/>
+    <moqui.basic.Enumeration description="Tax - Pension and welfare fund for surveyors" enumId="ItemTaxStateSurveyors" parentEnumId="ItemPayrollTaxes" enumTypeId="ItemType"/>
+    <moqui.basic.Enumeration description="Tax - National pension and welfare fund for self-employed engineers and architects" enumId="ItemTaxStateEngArch" parentEnumId="ItemPayrollTaxes" enumTypeId="ItemType"/>
+    <moqui.basic.Enumeration description="Tax - National fund for solicitors" enumId="ItemTaxStateSolicitors" parentEnumId="ItemPayrollTaxes" enumTypeId="ItemType"/>
+    <moqui.basic.Enumeration description="Tax - National pension and welfare fund for bookkeepers and commercial experts" enumId="ItemTaxStateBookkeepers" parentEnumId="ItemPayrollTaxes" enumTypeId="ItemType"/>
+    <moqui.basic.Enumeration description="Tax - National welfare board for sales agents and representatives (ENASARCO)" enumId="ItemTaxStateEnasarco" parentEnumId="ItemPayrollTaxes" enumTypeId="ItemType"/>
+    <moqui.basic.Enumeration description="Tax - National pension and welfare board for employment consultants (ENPACL)" enumId="ItemTaxStateEnpacl" parentEnumId="ItemPayrollTaxes" enumTypeId="ItemType"/>
+    <moqui.basic.Enumeration description="Tax - National pension and welfare board for doctors (ENPAM)" enumId="ItemTaxStateEnpam" parentEnumId="ItemPayrollTaxes" enumTypeId="ItemType"/>
+    <moqui.basic.Enumeration description="Tax - National pension and welfare board for pharmacists (ENPAF)" enumId="ItemTaxStateEnpaf" parentEnumId="ItemPayrollTaxes" enumTypeId="ItemType"/>
+    <moqui.basic.Enumeration description="Tax - National pension and welfare board for veterinary physicians (ENPAV)" enumId="ItemTaxStateEnpav" parentEnumId="ItemPayrollTaxes" enumTypeId="ItemType"/>
+    <moqui.basic.Enumeration description="Tax - National pension and welfare board for agricultural employees (ENPAIA)" enumId="ItemTaxStateEnpaia" parentEnumId="ItemPayrollTaxes" enumTypeId="ItemType"/>
+    <moqui.basic.Enumeration description="Tax - Pension fund for employees of shipping companies and maritime agencies" enumId="ItemTaxStateShippingEmpe" parentEnumId="ItemPayrollTaxes" enumTypeId="ItemType"/>
+    <moqui.basic.Enumeration description="Tax - National pension institute for Italian journalists (INPGI)" enumId="ItemTaxStateInpgi" parentEnumId="ItemPayrollTaxes" enumTypeId="ItemType"/>
+    <moqui.basic.Enumeration description="Tax - National welfare board for orphans of Italian doctors (ONAOSI)" enumId="ItemTaxStateOnaosi" parentEnumId="ItemPayrollTaxes" enumTypeId="ItemType"/>
+    <moqui.basic.Enumeration description="Tax - Autonomous supplementary welfare fund for Italian journalists (CASAGIT)" enumId="ItemTaxStateCasagit" parentEnumId="ItemPayrollTaxes" enumTypeId="ItemType"/>
+    <moqui.basic.Enumeration description="Tax - Pension board for industrial experts and graduate industrial experts (EPPI)" enumId="ItemTaxStateEppi" parentEnumId="ItemPayrollTaxes" enumTypeId="ItemType"/>
+    <moqui.basic.Enumeration description="Tax - National multi-category pension and welfare board (EPAP)" enumId="ItemTaxStateEpap" parentEnumId="ItemPayrollTaxes" enumTypeId="ItemType"/>
+    <moqui.basic.Enumeration description="Tax - National pension and welfare board for biologists (ENPAB)" enumId="ItemTaxStateEnpab" parentEnumId="ItemPayrollTaxes" enumTypeId="ItemType"/>
+    <moqui.basic.Enumeration description="Tax - National pension and welfare board for the nursing profession (ENPAPI)" enumId="ItemTaxStateEnpapi" parentEnumId="ItemPayrollTaxes" enumTypeId="ItemType"/>
+    <moqui.basic.Enumeration description="Tax - National pension and welfare board for psychologists (ENPAP)" enumId="ItemTaxStateEnpap" parentEnumId="ItemPayrollTaxes" enumTypeId="ItemType"/>
+    <moqui.basic.Enumeration description="Tax - National Social Security Institute (INPS)" enumId="ItemTaxStateINPS" parentEnumId="ItemPayrollTaxes" enumTypeId="ItemType"/>							
+
+    <!-- Italian Withholding Tax -->
+    <!-- For different withholding tax percentages create child enumerations, e.g.:
+    <moqui.basic.Enumeration description="Tax - ENASARCO contribution 17%" enumCode="ENASARCO17" optionValue="17" enumId="ItemTaxStateWholdENASARCO17" parentEnumId="ItemTaxStateWholdENASARCO" enumTypeId="ItemType"/>
+    -->
+    <moqui.basic.Enumeration description="Tax - Withholding tax natural persons" enumId="ItemTaxStateWholdPerson" parentEnumId="ItemPayrollTaxes" enumTypeId="ItemType"/>
+    <moqui.basic.Enumeration description="Tax - Withholding corporate entities" enumId="ItemTaxStateWholdCorporate" parentEnumId="ItemPayrollTaxes" enumTypeId="ItemType"/>
+    <moqui.basic.Enumeration description="Tax - INPS contribution" enumId="ItemTaxStateWholdInps" parentEnumId="ItemPayrollTaxes" enumTypeId="ItemType"/>
+    <moqui.basic.Enumeration description="Tax - ENASARCO contribution" enumId="ItemTaxStateWholdEnasarco" parentEnumId="ItemPayrollTaxes" enumTypeId="ItemType"/>
+    <moqui.basic.Enumeration description="Tax - ENPAM contribution" enumId="ItemTaxStateWholdEnpam" parentEnumId="ItemPayrollTaxes" enumTypeId="ItemType"/>
+    <moqui.basic.Enumeration description="Tax - Other social security contribution" enumId="ItemTaxStateWholdOther" parentEnumId="ItemPayrollTaxes" enumTypeId="ItemType"/>
+
     <moqui.basic.Enumeration description="Payroll Expense" enumId="ItemPayrollExpense" enumTypeId="ItemType"/>
     <moqui.basic.Enumeration description="125*Compy. Contr Other Premium" enumId="ItemPrlExp125Compy" parentEnumId="ItemPayrollExpense" enumTypeId="ItemType"/>
     <moqui.basic.Enumeration description="125*PPO" enumId="ItemPrlExp125Ppo" parentEnumId="ItemPayrollExpense" enumTypeId="ItemType"/>
@@ -229,6 +286,28 @@ along with this software (see the LICENSE.md file). If not, see
 
     <moqui.basic.EnumGroupMember enumId="ItemSalesTax" enumGroupEnumId="EngItemsSales"/>
     <moqui.basic.EnumGroupMember enumId="ItemVatTax" enumGroupEnumId="EngItemsSales"/>
+    <moqui.basic.EnumGroupMember enumId="ItemVatTaxTotal" enumGroupEnumId="EngItemsSales"/>
+    <moqui.basic.EnumGroupMember enumId="ItemVatExcludedArt15" enumGroupEnumId="EngItemsSales"/>
+    <moqui.basic.EnumGroupMember enumId="ItemVatNotSubjectArt7" enumGroupEnumId="EngItemsSales"/>
+    <moqui.basic.EnumGroupMember enumId="ItemVatNotSubjectOtherCases" enumGroupEnumId="EngItemsSales"/>
+    <moqui.basic.EnumGroupMember enumId="ItemVatNotTaxableExportations" enumGroupEnumId="EngItemsSales"/>
+    <moqui.basic.EnumGroupMember enumId="ItemVatNotTaxableIntraCommunity" enumGroupEnumId="EngItemsSales"/>
+    <moqui.basic.EnumGroupMember enumId="ItemVatNotTaxableSanMarino" enumGroupEnumId="EngItemsSales"/>
+    <moqui.basic.EnumGroupMember enumId="ItemVatNotTaxableExportSupplies" enumGroupEnumId="EngItemsSales"/>
+    <moqui.basic.EnumGroupMember enumId="ItemVatNotTaxableDeclarationOfIntent" enumGroupEnumId="EngItemsSales"/>
+    <moqui.basic.EnumGroupMember enumId="ItemVatNotTaxableOtherTransactions" enumGroupEnumId="EngItemsSales"/>
+    <moqui.basic.EnumGroupMember enumId="ItemVatExempt" enumGroupEnumId="EngItemsSales"/>
+    <moqui.basic.EnumGroupMember enumId="ItemVatMarginRegime" enumGroupEnumId="EngItemsSales"/>
+    <moqui.basic.EnumGroupMember enumId="ItemVatReverseChargeScrap" enumGroupEnumId="EngItemsSales"/>
+    <moqui.basic.EnumGroupMember enumId="ItemVatReverseChargeGoldSilver" enumGroupEnumId="EngItemsSales"/>
+    <moqui.basic.EnumGroupMember enumId="ItemVatReverseChargeSubcontracting" enumGroupEnumId="EngItemsSales"/>
+    <moqui.basic.EnumGroupMember enumId="ItemVatReverseChargeBuildings" enumGroupEnumId="EngItemsSales"/>
+    <moqui.basic.EnumGroupMember enumId="ItemVatReverseChargeMobilePhones" enumGroupEnumId="EngItemsSales"/>
+    <moqui.basic.EnumGroupMember enumId="ItemVatReverseChargeElectronicProd" enumGroupEnumId="EngItemsSales"/>
+    <moqui.basic.EnumGroupMember enumId="ItemVatReverseChargeConstruction" enumGroupEnumId="EngItemsSales"/>
+    <moqui.basic.EnumGroupMember enumId="ItemVatReverseChargeEnergy" enumGroupEnumId="EngItemsSales"/>
+    <moqui.basic.EnumGroupMember enumId="ItemVatReverseChargeOtherCases" enumGroupEnumId="EngItemsSales"/>
+    <moqui.basic.EnumGroupMember enumId="ItemVatPaidInOtherEUCountries" enumGroupEnumId="EngItemsSales"/>
     <moqui.basic.EnumGroupMember enumId="ItemShipping" enumGroupEnumId="EngItemsSales"/>
     <moqui.basic.EnumGroupMember enumId="ItemDiscount" enumGroupEnumId="EngItemsSales"/>
     <moqui.basic.EnumGroupMember enumId="ItemDiscountAppease" enumGroupEnumId="EngItemsSales"/>
@@ -272,6 +351,28 @@ along with this software (see the LICENSE.md file). If not, see
 
     <moqui.basic.EnumGroupMember enumId="ItemSalesTax" enumGroupEnumId="EngItemsPurchase"/>
     <moqui.basic.EnumGroupMember enumId="ItemVatTax" enumGroupEnumId="EngItemsPurchase"/>
+    <moqui.basic.EnumGroupMember enumId="ItemVatTaxTotal" enumGroupEnumId="EngItemsPurchase"/>
+    <moqui.basic.EnumGroupMember enumId="ItemVatExcludedArt15" enumGroupEnumId="EngItemsPurchase"/>
+    <moqui.basic.EnumGroupMember enumId="ItemVatNotSubjectArt7" enumGroupEnumId="EngItemsPurchase"/>
+    <moqui.basic.EnumGroupMember enumId="ItemVatNotSubjectOtherCases" enumGroupEnumId="EngItemsPurchase"/>
+    <moqui.basic.EnumGroupMember enumId="ItemVatNotTaxableExportations" enumGroupEnumId="EngItemsPurchase"/>
+    <moqui.basic.EnumGroupMember enumId="ItemVatNotTaxableIntraCommunity" enumGroupEnumId="EngItemsPurchase"/>
+    <moqui.basic.EnumGroupMember enumId="ItemVatNotTaxableSanMarino" enumGroupEnumId="EngItemsPurchase"/>
+    <moqui.basic.EnumGroupMember enumId="ItemVatNotTaxableExportSupplies" enumGroupEnumId="EngItemsPurchase"/>
+    <moqui.basic.EnumGroupMember enumId="ItemVatNotTaxableDeclarationOfIntent" enumGroupEnumId="EngItemsPurchase"/>
+    <moqui.basic.EnumGroupMember enumId="ItemVatNotTaxableOtherTransactions" enumGroupEnumId="EngItemsPurchase"/>
+    <moqui.basic.EnumGroupMember enumId="ItemVatExempt" enumGroupEnumId="EngItemsPurchase"/>
+    <moqui.basic.EnumGroupMember enumId="ItemVatMarginRegime" enumGroupEnumId="EngItemsPurchase"/>
+    <moqui.basic.EnumGroupMember enumId="ItemVatReverseChargeScrap" enumGroupEnumId="EngItemsPurchase"/>
+    <moqui.basic.EnumGroupMember enumId="ItemVatReverseChargeGoldSilver" enumGroupEnumId="EngItemsPurchase"/>
+    <moqui.basic.EnumGroupMember enumId="ItemVatReverseChargeSubcontracting" enumGroupEnumId="EngItemsPurchase"/>
+    <moqui.basic.EnumGroupMember enumId="ItemVatReverseChargeBuildings" enumGroupEnumId="EngItemsPurchase"/>
+    <moqui.basic.EnumGroupMember enumId="ItemVatReverseChargeMobilePhones" enumGroupEnumId="EngItemsPurchase"/>
+    <moqui.basic.EnumGroupMember enumId="ItemVatReverseChargeElectronicProd" enumGroupEnumId="EngItemsPurchase"/>
+    <moqui.basic.EnumGroupMember enumId="ItemVatReverseChargeConstruction" enumGroupEnumId="EngItemsPurchase"/>
+    <moqui.basic.EnumGroupMember enumId="ItemVatReverseChargeEnergy" enumGroupEnumId="EngItemsPurchase"/>
+    <moqui.basic.EnumGroupMember enumId="ItemVatReverseChargeOtherCases" enumGroupEnumId="EngItemsPurchase"/>
+    <moqui.basic.EnumGroupMember enumId="ItemVatPaidInOtherEUCountries" enumGroupEnumId="EngItemsPurchase"/>
     <moqui.basic.EnumGroupMember enumId="ItemShipping" enumGroupEnumId="EngItemsPurchase"/>
     <moqui.basic.EnumGroupMember enumId="ItemShippingOther" enumGroupEnumId="EngItemsPurchase"/>
     <moqui.basic.EnumGroupMember enumId="ItemDiscount" enumGroupEnumId="EngItemsPurchase"/>

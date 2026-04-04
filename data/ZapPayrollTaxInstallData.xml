@@ -460,4 +460,18 @@ along with this software (see the LICENSE.md file). If not, see
         <details flatAmount="-300"/>
     </mantle.humanres.employment.PayrollAdjustment>
     -->
+
+    <!-- ========== Italy State ========== -->
+    <!-- see https://www.agenziaentrate.gov.it/ -->
+    <mantle.party.Party partyId="ItaRa" partyTypeEnumId="PtyOrganization">
+         <organization organizationName="Italian Revenue Agency"/>
+         <roles roleTypeId="OrgTaxAuthority"/>
+         <mantle.party.contact.ContactMech contactMechId="ItaRa_PWS" contactMechTypeEnumId="CmtWebAddress"
+                 infoString="https://www.agenziaentrate.gov.it/">
+             <mantle.party.contact.PartyContactMech contactMechPurposeId="WebUrlPayment" fromDate="1265184000000"/>
+         </mantle.party.contact.ContactMech>
+     </mantle.party.Party>
+     <mantle.other.tax.TaxAuthority taxAuthorityId="ItaRa" description="Italian Revenue Agency" taxAuthGeoId="ITA"
+             taxAuthPartyId="ItaRa" taxAuthorityTypeEnumId="TatState" requireTaxIdForExemption="Y"/>
+
 </entity-facade-xml>

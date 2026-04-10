@@ -132,7 +132,6 @@ along with this software (see the LICENSE.md file). If not, see
             <moqui.basic.Enumeration description="Sample" enumId="PpSample" parentEnumId="PpMonitoring" enumTypeId="ParameterPurpose"/>
             <moqui.basic.Enumeration enumId="PpMeshMaterial" enumTypeId="ParameterPurpose" description="Mesh Material Property Assignment"/>
             <moqui.basic.Enumeration enumId="PpMeshRendering" enumTypeId="ParameterPurpose" description="Mesh Visual/Rendering Property Assignment"/>
-            <moqui.basic.Enumeration enumId="PpConstraint" enumTypeId="ParameterPurpose" description="Constraint"/>
             <!-- Physical and engineering purposes. -->
             <moqui.basic.Enumeration enumId="PpPhysical" description="Physical quantity" enumTypeId="ParameterPurpose"/>
             <moqui.basic.Enumeration enumId="PpMechanical" description="Mechanical property" enumTypeId="ParameterPurpose"/>
@@ -183,8 +182,8 @@ along with this software (see the LICENSE.md file). If not, see
     <entity entity-name="ParameterLog" package="mantle.math" cache="never" sequence-bank-size="1000" short-alias="parameterLog"> <!-- use="logging" -->
         <field name="parameterLogId" type="id" is-pk="true"/>
         <field name="parameterId" type="id" not-null="true"/>
-        <field name="sequenceNum" type="number-integer"/> <!-- not-null="true" -->
-        <field name="observedDate" type="date-time" default="ec.user.nowTimestamp"/> <!-- not-null="true" -->
+        <field name="sequenceNum" type="number-integer" not-null="true"/>
+        <field name="observedDate" type="date-time" default="ec.user.nowTimestamp" not-null="true"/>
 
         <field name="numericValue" type="number-decimal"/>
         <field name="symbolicValue" type="text-short"/>
@@ -231,7 +230,7 @@ along with this software (see the LICENSE.md file). If not, see
         <relationship type="one" title="VectorPurpose" related="moqui.basic.Enumeration" short-alias="purpose">
             <key-map field-name="purposeEnumId"/></relationship>
         <relationship type="one" title="VectorSpace" related="moqui.basic.Enumeration" short-alias="vectorSpace">
-            <key-map field-name="vectorSpaceEnumId"/></relationship>
+            <key-map field-name="vectorSpaceEnumId" related="enumId"/></relationship>
         <relationship type="one" related="mantle.math.CoordinateSystem" short-alias="coordSystem"/>
         <relationship type="many" related="mantle.math.VectorComponent" short-alias="components"/>
         <seed-data>
@@ -401,8 +400,6 @@ along with this software (see the LICENSE.md file). If not, see
             <key-map field-name="conditionNormEnumId"/></relationship>
         <relationship type="many" related="mantle.math.MatrixComponent" short-alias="components">
             <key-map field-name="matrixId"/></relationship>
-        <relationship type="many" related="mantle.math.BlockMatrixExtraction" short-alias="blockMatrices">
-            <key-map field-name="originalMatrixId" related="matrixId"/></relationship>
         <index name="MATRIX_DOM_COD"><index-field name="domainSpaceEnumId"/>
             <index-field name="codomainSpaceEnumId"/></index>
         <seed-data>
@@ -534,8 +531,9 @@ along with this software (see the LICENSE.md file). If not, see
             Device: can be used to model which backend (CPU, CUDA, MPS, etc.) owns the buffer. -->
         <field name="storageTypeEnumId" type="id"/>
         <field name="memoryFormatEnumId" type="id">
+            <description>Logical in-memory layout / index order of dense tensor storage.</description></field>
+        <field name="isPinned" type="text-indicator">
             <description>Pinned-memory flag. Mostly CUDA host-to-device.</description></field>
-        <field name="isPinned" type="text-indicator"/>
 
         <!-- Quantization refers to techniques for performing computations and storing tensors at lower bitwidths than floating point precision. -->
         <field name="quantSchemeEnumId" type="id"/>
@@ -550,7 +548,7 @@ along with this software (see the LICENSE.md file). If not, see
         <field name="arrayChecksum" type="text-short"/>
 
         <relationship type="one" title="Parent" related="mantle.math.Tensor" short-alias="parent">
-            <key-map field-name="parentTensorId"/></relationship>
+            <key-map field-name="parentTensorId" related="tensorId"/></relationship>
         <relationship type="one" title="TensorType" related="moqui.basic.Enumeration" short-alias="type">
             <key-map field-name="tensorTypeEnumId"/></relationship>
         <relationship type="one" title="TensorPurpose" related="moqui.basic.Enumeration" short-alias="purpose">
@@ -602,7 +600,6 @@ along with this software (see the LICENSE.md file). If not, see
             <moqui.basic.Enumeration enumId="TapTucker" enumTypeId="TensorApproxMethod" description="Tucker / HOSVD compression"/>
             <moqui.basic.Enumeration enumId="TapCP" enumTypeId="TensorApproxMethod" description="Canonical Polyadic (CP) Rank-R"/>
             <moqui.basic.Enumeration enumId="TapTT" enumTypeId="TensorApproxMethod" description="Tensor-Train (TT) Truncation"/>
-            <moqui.basic.EnumerationType enumTypeId="TensorApproxMethod" description="Tensor Approximation / Compression Method"/>
             <!-- Sparsification / pruning -->
             <moqui.basic.Enumeration enumId="TapPrune" enumTypeId="TensorApproxMethod" description="Structured / Unstructured Pruning"/>
             <!-- Sketching / randomised -->
@@ -824,7 +821,7 @@ along with this software (see the LICENSE.md file). If not, see
         <relationship type="one" related="mantle.math.CoordinateSystemTransformation" short-alias="transformationToParent">
             <key-map field-name="transformationToParentSystemId" related="transformationId"/></relationship>
         <relationship type="one" title="VectorSpace" related="moqui.basic.Enumeration" short-alias="vectorSpace">
-            <key-map field-name="vectorSpaceEnumId"/></relationship>
+            <key-map field-name="vectorSpaceEnumId" related="enumId"/></relationship>
         <relationship type="one" title="CoordinateSystemType" related="moqui.basic.Enumeration" short-alias="type">
             <key-map field-name="coordinateSystemTypeEnumId"/></relationship>
         <relationship type="one" title="CoordinateSystemPurpose" related="moqui.basic.Enumeration" short-alias="purpose">
@@ -1705,7 +1702,6 @@ along with this software (see the LICENSE.md file). If not, see
             <moqui.basic.Enumeration enumId="MmtDlSoms" parentEnumId="MmtDlModel" enumTypeId="MathModelType" description="Self-Organizing Maps"/>
             <moqui.basic.Enumeration enumId="MmtDlTransformer" parentEnumId="MmtDlModel" enumTypeId="MathModelType" description="Transformer Neural Network"/>
             <moqui.basic.Enumeration enumId="MmtDlSeqToSeq" parentEnumId="MmtDlModel" enumTypeId="MathModelType" description="Sequence-To-Sequence Neural Network"/>
-            <moqui.basic.Enumeration enumId="MmtParametricPath" parentEnumId="MmtDataDriven" enumTypeId="MathModelType" description="Parametric Path or Surface Fit Model"/>
             <moqui.basic.Enumeration enumId="MmtRegression" parentEnumId="MmtDataDriven" enumTypeId="MathModelType" description="Statistical Regression"/>
             <moqui.basic.Enumeration enumId="MmtMeasuredDataSeries" parentEnumId="MmtDataDriven" enumTypeId="MathModelType" description="Measured Data Series Model"/>
             <!-- Math Model Usage Context -->
@@ -1910,7 +1906,7 @@ along with this software (see the LICENSE.md file). If not, see
         <field name="mathModelEventId" type="id" is-pk="true"/>
         <field name="mathModelRunId" type="id" not-null="true"/>
         <field name="eventTypeEnumId" type="id"/>
-        <field name="eventTimestamp" type="date-time" default="ec.user.nowTimestamp" is-pk="true"/>
+        <field name="eventTimestamp" type="date-time" default="ec.user.nowTimestamp" not-null="true"/>
         <field name="eventName" type="text-medium" enable-localization="true"/>
         <field name="eventPayload" type="text-long"/>
         <field name="sequenceNum" type="number-integer"/>
@@ -1974,7 +1970,7 @@ along with this software (see the LICENSE.md file). If not, see
         <field name="graphEdgeId" type="id"/>
         <field name="meshKCellId" type="id"/>
         <field name="meshGroupId" type="id"/>
-        <field name="fromDate" type="date-time" is-pk="true"/>
+        <field name="fromDate" type="date-time" default="ec.user.nowTimestamp" not-null="true"/>
         <field name="thruDate" type="date-time"/>
         <field name="sequenceNum" type="number-integer"/>
         <field name="uomId" type="id">
@@ -2317,8 +2313,8 @@ along with this software (see the LICENSE.md file). If not, see
         <field name="natTransfCompositionId" type="id" is-pk="true"/>
         <field name="compositionTypeEnumId" type="id"/>
         <field name="resultNatTransfId" type="id" not-null="true"/>
-        <field name="operandNatTransfId" type="id" is-pk="true"/>
-        <field name="operandIndex" type="number-integer" is-pk="true"/>
+        <field name="operandNatTransfId" type="id" not-null="true"/>
+        <field name="operandIndex" type="number-integer" not-null="true"/>
 
         <relationship type="one" title="ResultNatTransf" related="mantle.math.ct.NaturalTransformation" short-alias="resultNatTransf">
             <key-map field-name="resultNatTransfId" related="naturalTransformationId"/></relationship>
@@ -2785,7 +2781,7 @@ along with this software (see the LICENSE.md file). If not, see
         <description>Associates a specific texture and its mapping with a MeshKCell.
             This allows precise UV mapping and transformation per cell, useful in graphical or texture-based simulations.</description>
         <field name="meshKCellTextureId" type="id" is-pk="true"/>
-        <field name="meshKCellId" type="id" is-pk="true"/>
+        <field name="meshKCellId" type="id" not-null="true"/>
         <field name="uvCoordVectorId" type="id">
             <description>UV/Texture coordinates used to map 2D textures onto the surface of the cell.
                 Defines how a texture is wrapped around this specific k-cell.</description></field>

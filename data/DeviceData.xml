@@ -46,7 +46,7 @@ along with this software (see the LICENSE.md file). If not, see
     <moqui.basic.Enumeration description="Industrial Primary Data Storage Server" enumId="DtIndustrialPrimaryDataStorageServer" parentEnumId="DtStorageServer" enumTypeId="DeviceType"/>
     <moqui.basic.Enumeration description="Unstructured Data Storage Server" enumId="DtUnstructuredDataStorageServer" parentEnumId="DtStorageServer" enumTypeId="DeviceType"/>
 
-    <moqui.basic.Enumeration description="PC" enumId="DtPC" parentEnumId="DtComputer" enumTypeId="DeviceType"/>
+    <moqui.basic.Enumeration description="PC" enumId="DtPc" parentEnumId="DtComputer" enumTypeId="DeviceType"/>
     <moqui.basic.Enumeration description="Industrial Pc" enumId="DtIndustrialPc" parentEnumId="DtPc" enumTypeId="DeviceType"/>
     
     <moqui.basic.Enumeration description="IoT" enumId="DtIoT" parentEnumId="DtComputer" enumTypeId="DeviceType"/>
@@ -110,7 +110,7 @@ along with this software (see the LICENSE.md file). If not, see
     <moqui.basic.Enumeration description="Network Bridge" enumId="DtNetworkBridge" parentEnumId="DtNetworkDevice" enumTypeId="DeviceType"/>
     <moqui.basic.Enumeration description="Modem" enumId="DtModem" parentEnumId="DtNetworkDevice" enumTypeId="DeviceType"/>
     <moqui.basic.Enumeration description="Access Point" enumId="DtAccessPoint" parentEnumId="DtNetworkDevice" enumTypeId="DeviceType"/>
-    <moqui.basic.Enumeration description="Indoor Access Point" enumId="DtindoorAccessPoint" parentEnumId="DtAccessPoint" enumTypeId="DeviceType"/>
+    <moqui.basic.Enumeration description="Indoor Access Point" enumId="DtIndoorAccessPoint" parentEnumId="DtAccessPoint" enumTypeId="DeviceType"/>
     <moqui.basic.Enumeration description="Outdoor Access Point" enumId="DtOutdoorAccessPoint" parentEnumId="DtAccessPoint" enumTypeId="DeviceType"/>
 
     <!-- MtConnect Device Types -->
@@ -181,8 +181,8 @@ along with this software (see the LICENSE.md file). If not, see
     <moqui.basic.Enumeration description="Axes" enumId="DgtAxes" parentEnumId="DtDeviceGroup" enumTypeId="DeviceType"/>
 
     <moqui.basic.Enumeration description="Cluster Group" enumId="DgtCluster" parentEnumId="DtDeviceGroup" enumTypeId="DeviceType"/>
-    <moqui.basic.Enumeration description="Master/Slave Group" enumId="DatMasterSlave" parentEnumId="DgtCluster" enumTypeId="DeviceType"/>
-    <moqui.basic.Enumeration description="Primary/Secondary Hot-Standby Group" enumId="DgtPrimarySecondary" parentEnumId="DatMasterSlave" enumTypeId="DeviceType"/>
+    <moqui.basic.Enumeration description="Master/Slave Group" enumId="DgtMasterSlave" parentEnumId="DgtCluster" enumTypeId="DeviceType"/>
+    <moqui.basic.Enumeration description="Primary/Secondary Hot-Standby Group" enumId="DgtPrimarySecondary" parentEnumId="DgtMasterSlave" enumTypeId="DeviceType"/>
 
     <moqui.basic.Enumeration description="Networking Group" enumId="DgtNetworking" parentEnumId="DtDeviceGroup" enumTypeId="DeviceType"/>
     <moqui.basic.Enumeration description="Access Layer Group" enumId="DgtAccessLayer" parentEnumId="DgtNetworking" enumTypeId="DeviceType"/>
@@ -249,7 +249,7 @@ along with this software (see the LICENSE.md file). If not, see
     <moqui.basic.Enumeration description="Conveyor Control" enumId="DepConveyorControl" enumTypeId="DevicePurpose"/>
     <moqui.basic.Enumeration description="Mixer Control" enumId="DepMixerControl" enumTypeId="DevicePurpose"/>
     <moqui.basic.Enumeration description="Milling Control" enumId="DepMillingControl" enumTypeId="DevicePurpose"/>
-    <moqui.basic.Enumeration description="Crusher Control" enumId="DepCruscerControl" enumTypeId="DevicePurpose"/>
+    <moqui.basic.Enumeration description="Crusher Control" enumId="DepCrusherControl" enumTypeId="DevicePurpose"/>
     <moqui.basic.Enumeration description="Shredder Control" enumId="DepShredderControl" enumTypeId="DevicePurpose"/>
     <moqui.basic.Enumeration description="Centrifuge Control" enumId="DepCentrifugeControl" enumTypeId="DevicePurpose"/>
     <moqui.basic.Enumeration description="Transport Systems Control" enumId="DepTransportSystemsControl" enumTypeId="DevicePurpose"/>

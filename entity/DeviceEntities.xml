@@ -86,8 +86,8 @@ along with this software (see the LICENSE.md file). If not, see
         <relationship type="one" related="moqui.basic.GeoPoint" short-alias="geoPoint"/>
         <relationship type="one-nofk" related="mantle.device.PhysicalDevice" short-alias="physicalDevice" mutable="true"/>
         <relationship type="one-nofk" related="mantle.device.DeviceGroup" short-alias="deviceGroup" mutable="true"/>
-        <relationship type="many" related="mantle.device.Device" short-alias="childs">
-            <key-map field-name="parentDeviceId" related="deviceId"/></relationship>
+        <relationship type="many" related="mantle.device.Device" short-alias="children">
+            <key-map field-name="deviceId" related="parentDeviceId"/></relationship>
         <relationship type="many" related="mantle.math.Parameter" short-alias="parameters">
             <key-map field-name="deviceId"/></relationship>
         <relationship type="many" title="Status" related="moqui.entity.EntityAuditLog" short-alias="statusLogs">
@@ -237,19 +237,14 @@ along with this software (see the LICENSE.md file). If not, see
             <key-map field-name="memberDeviceId" related="deviceId"/></relationship>
         <relationship type="one" title="DeviceGroupMemberPurpose" related="moqui.basic.Enumeration" short-alias="purpose">
             <key-map field-name="purposeEnumId"/></relationship>
-        <relationship type="one" title="DeviceGroupMember" related="moqui.basic.StatusItem" short-alias="status"/>
+        <relationship type="one" related="moqui.basic.StatusItem" short-alias="status"/>
         <relationship type="one" related="moqui.basic.StatusFlow" short-alias="statusFlow"/>
     </entity>
     <entity entity-name="DeviceStats" package="mantle.device" use="nontransactional" cache="never" sequence-bank-size="100">
-        <description>Device statistics.</description>
+        <description>Aggregate lifetime statistics for a device.</description>
         <field name="deviceStatsId" type="id" is-pk="true"/>
         <field name="deviceId" type="id" not-null="true"/>
-        <field name="statusId" type="id">
-            <description>The status to which the statistics refer.</description></field>
-        <field name="statusFlowId" type="id">
-            <description>The status flow to which the statistics refer.</description></field>
-
-        <!-- Statistical indices that for performance analysis, reliability tracking, and error monitoring. -->
+        <!-- Reliability and maintenance -->
         <field name="meanTimeBetweenFailure" type="number-decimal">
             <description>Mean Time Between Failures (MTBF) [hours].
                 MTBF is the average time the system operates without failure.</description></field>
@@ -257,77 +252,63 @@ along with this software (see the LICENSE.md file). If not, see
             <description>Mean Time To Repair (MTTR) [hours].
                 MTTR is the average time it takes to repair the device after a failure.</description></field>
         <field name="availability" type="number-decimal">
-            <description>Availability [ratio 0-1].
+            <description>Availability [ratio 0..1].
                 Availability measures the percentage of time the system is operational.
                 Availability = MTBF/(MTBF + MTTR).</description></field>
         <field name="reliability" type="number-decimal">
-            <description>Reliability [ratio 0-1].
-	            The reliability of the device over a period t can be modeled using the exponential reliability function: R(t) = exp(−1/MTBF). 
-	            This gives the probability that the system will operate without failure for time t.</description></field>
+            <description>Reliability [ratio 0..1].
+                The reliability of the device over a period t can be modeled using the exponential reliability function: R(t) = exp(−1/MTBF). 
+                This gives the probability that the system will operate without failure for time t.</description></field>
         <field name="failureRate" type="number-decimal">
             <description>Failure Rate (λ) [failures/hour].
-	            The failure rate is the reciprocal of MTBF: λ = 1/MTBF.</description></field>
+                The failure rate is the reciprocal of MTBF: λ = 1/MTBF.</description></field>
         <field name="meanTimeToAcknowledge" type="number-decimal">
             <description>Mean Time To Acknowledge (MTTA) [hours].
                 Time taken to acknowledge a fault after detection.</description></field>
-        <field name="meanTimeToAcknowledgeCount" type="number-decimal"/>
-        <field name="totalMeanTimeToAcknowledge" type="number-decimal"/>
-        <field name="warning" type="text-indicator"/>
-        <!-- Risk and Failure Probability Indices. -->
-        <field name="probabilityFailureDemand" type="number-decimal">
-            <description>Probability that the system will fail upon demand.</description></field>
-        <!-- Used in Failure Modes and Effects Analysis (FMEA) to rank risks. -->
-        <field name="riskPriorityNumber" type="number-integer">
-            <description>Product of severity, occurrence, and detection rankings for risk prioritization.</description></field>
-        <field name="overallEquipmentEffectiveness" type="number-integer">
-            <description>Overall Equipment Effectiveness (OEE). Combine availability, performance, and quality to evaluate total equipment effectiveness.</description></field>
-
-        <!-- Energy and Environmental Metrics. -->
+        <field name="acknowledgeCount" type="number-integer"/>
+        <field name="totalAcknowledgeTime" type="number-decimal"/>
+        <!-- Risk -->
+        <field name="probabilityFailureDemand" type="number-decimal"/>
+        <field name="riskPriorityNumber" type="number-integer"/>
+        <!-- Effectiveness -->
+        <field name="overallEquipmentEffectiveness" type="number-decimal">
+            <description>Overall Equipment Effectiveness (OEE) ratio or percentage.</description>
+        </field>
+        <!-- Energy and environment -->
         <field name="energyConsumption" type="number-decimal">
-            <description>Total energy consumed during execution (in Joules or kWh) for efficiency analysis.</description></field>
-        <field name="maxPowerDraw" type="number-decimal">
-            <description>Maximum power draw during trajectory execution (in Watts). Identifies potential overloading risks.</description></field>
-        <field name="maxTemperature" type="number-decimal">
-            <description>Highest recorded temperature during execution (in °C). Monitors thermal stress on the system.</description></field>
+            <description>Total lifetime energy consumption.</description>
+        </field>
+        <field name="maxPowerDraw" type="number-decimal"/>
+        <field name="maxTemperature" type="number-decimal"/>
+        <!-- Global status/cycle counters -->
+        <field name="statusChangeCount" type="number-integer">
+            <description>Total number of status changes of the device.</description></field>
+        <field name="lastStatusChangeDate" type="date-time">
+            <description>Timestamp of the last status change.</description></field>
+        <field name="totalOperatingTime" type="number-decimal">
+            <description>Total accumulated operating time of the device.</description></field>
 
-        <!-- Status Tracking -->
-        <field name="statusCounts" type="number-decimal">
-            <description>Number of times each status was reached.</description></field>
-        <field name="lastStatusChangeTimes" type="number-decimal">
-            <description>Times of last status changes.</description></field>
-        <field name="durations" type="number-decimal">
-            <description>Last duration in each status.</description></field>
-        <field name="totalTimes" type="number-decimal">
-            <description>Cumulative or total time spent in each status.</description></field>
-
-        <!-- Statistics for cyclic and repetitive movements or trajectories,
-            as in the case of intermittent asynchronous and synchronous machines.
-	        They have no significant meaning in case of continuous machines. -->
+        <!-- Cycle / transition duration statistics -->
         <field name="minTime" type="number-decimal">
-            <description>Minimum time spent in each status.</description></field>
+            <description>Minimum observed cycle or transition duration.</description></field>
         <field name="maxTime" type="number-decimal">
-            <description>Maximum time spent in each status.</description></field>
+            <description>Maximum observed cycle or transition duration.</description></field>
         <field name="avgTime" type="number-decimal">
-            <description>Average time spent in each status.</description></field>
+            <description>Average cycle or transition duration.</description></field>
         <field name="sumSquaredDuration" type="number-decimal">
-            <description>Sum of squared durations in each status, for variance calculation.</description></field>
-        <field name="varianceTime" type="number-decimal">
-            <description>Variance of time in each status.</description></field>
-        <field name="stdDevTime" type="number-decimal">
-            <description>Standard deviation of time in each status.</description></field>
-        <field name="zScore" type="number-decimal">
-            <description>A z-score, also known as a standard score, measures how many standard deviations a status duration is from the avarage duration.
-	            It provides a way to detect performance problem based on durations distribution relative to its mean and variability.</description></field>
+            <description>Sum of squared durations for variance calculation.</description></field>
+        <field name="varianceTime" type="number-decimal"/>
+        <field name="stdDevTime" type="number-decimal"/>
 
-        <!-- Operation Counters -->
-        <field name="successfulOps" type="number-decimal">
+        <!-- Operation counters -->
+        <field name="successfulOps" type="number-integer">
             <description>Count of successful operations.</description></field>
-        <field name="failedTransitions" type="number-decimal">
-            <description>Count of failed attempts of state transitions.</description></field>
+        <field name="failedTransitions" type="number-integer">
+            <description>Count of failed state transitions.</description></field>
 
         <relationship type="one" related="mantle.device.Device" short-alias="device"/>
-        <relationship type="one" related="moqui.basic.StatusFlowItem" short-alias="item">
-            <key-map field-name="statusFlowId"/><key-map field-name="statusId"/></relationship>
+        <index name="DEVSTAT_DEVICE" unique="true">
+            <index-field name="deviceId"/></index>
     </entity>
     <extend-entity entity-name="Parameter" package="mantle.math" enable-audit-log="update" use="configuration" cache="true" short-alias="parameters">
         <description>For device parameters.</description>
@@ -336,10 +317,11 @@ along with this software (see the LICENSE.md file). If not, see
     </extend-entity>
 
     <!-- ========== Device Log ========== -->
+    <!-- Currently unused -->
     <entity entity-name="DeviceLog" package="mantle.device" cache="never" sequence-bank-size="1000" short-alias="deviceLog">
         <field name="deviceLogId" type="id" is-pk="true"/>
         <field name="deviceId" type="id" not-null="true"/>
-        <field name="payload" type="binary-very-long" not-null="true">
+        <field name="payload" type="text-very-long" not-null="true">
             <description>Contains the aggregated JSON of the device's telemetry and data: { "temperature": 20, "rpm": 1000 ... }</description></field>
         <field name="sequenceNum" type="number-integer"/>
         <field name="observedDate" type="date-time" default="ec.user.nowTimestamp"/>
@@ -418,7 +400,7 @@ along with this software (see the LICENSE.md file). If not, see
     <entity entity-name="DeviceRequest" package="mantle.device" cache="true" short-alias="deviceRequests">
         <description>Represents a request to a device.</description>
         <field name="requestName" type="text-short" is-pk="true"/>
-        <field name="parentRequestName" type="id"/>
+        <field name="parentRequestName" type="text-short"/>
         <field name="deviceId" type="id" not-null="true">
             <description>The physical device to which the request should be made.</description></field>
         <field name="requestTypeEnumId" type="id"/>
